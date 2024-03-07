@@ -130,6 +130,7 @@
 .pagination {
     display: flex;
     flex-direction: row;
+    gap: 20px;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -274,6 +275,22 @@
     flex-direction: column;
     gap: 10px;
     margin-left: 30px;
+}
+
+#loadingIndicator {
+    position: fixed; /* ou 'absolute' */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Garante que fique acima de outros conteúdos */
+    
+    background: rgba( 255, 255, 255, 0.35 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 13.5px );
+    -webkit-backdrop-filter: blur( 13.5px );
+
+    border-radius: 10px;
+    border: 10px solid rgba( 255, 255, 255, 0.40 );
 }
 
 

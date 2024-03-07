@@ -1,6 +1,8 @@
 const listHtml = document.getElementById('pokemonList')
 const loadButton = document.getElementById('loadMoreButton')
 const detailsPokemon = document.getElementById('detailsPokemon')
+const exportList = document.getElementById('exportList')
+const exportAllList = document.getElementById('exportAllList')
 
 const pageLimit = 5
 let offset = 0
@@ -105,25 +107,54 @@ loadButton.addEventListener('click', () => {
 })
 
 
-/* pokeApi.getPokemons().then((pokemonList = []) => {
+function exportToExcel(data, filename) {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Pokemons");
+    XLSX.writeFile(wb, `${filename}.xlsx`);
+}
 
- /*    const newList = pokemonList.map((pokemon) => {
-        return convertPokemonListToLi(pokemon);
-    })
+exportList.addEventListener('click', async () => {
+    document.getElementById('loadingIndicator').style.display = 'block';
+     await pokeApi.getPokemons(offset, pageLimit)
+         .then((pokemonDetailList) => { 
+             const dataForExcel = pokemonDetailList.map(pokemon => {
+                 pokemon.types = pokemon.types.join(', ');
+                 
+                 delete pokemon.type;
 
-    //o newList vai me dar um objeto com várias listas de html e para juntar todas e torna-la legivel para o html se utiliza o join
+                 return pokemon;
+             })
+             console.log(pokemonDetailList)
 
-    const newHTMLList = newList.join('');
+             exportToExcel(dataForExcel, 'ListaDePokemons')
+             document.getElementById('loadingIndicator').style.display = 'none';
+        })
+         .catch(error => {
+             console.error("Erro ao exportat pokemons: " + error)
+             document.getElementById('loadingIndicator').style.display = 'none';
+         })
+});
 
-    //join junta strings por padrão ela tras as strings separadas por , entao se coloca um '' para nao aparecer nenhum caracter na tela
+exportAllList.addEventListener('click', async () => {
+    document.getElementById('loadingIndicator').style.display = 'block';
+    
+     await pokeApi.getPokemons(0, 100)
+        .then((pokemonDetailList) => { 
+            const dataForExcel = pokemonDetailList.map(pokemon => {
+                pokemon.types = pokemon.types.join(', ');
 
-    listHtml.innerHTML += newHTMLList
+                return pokemon;
+            })
+            
+            exportToExcel(dataForExcel, 'ListaDePokemons')
+            document.getElementById('loadingIndicator').style.display = 'none';
+        })
+         .catch(error => {
+             console.error("Erro ao exportat pokemons: " + error)
+             document.getElementById('loadingIndicator').style.display = 'none';
+         })
+});
+    
 
-    // código acima sera reduzido para uma linha abaixo
-
-    listHtml.innerHTML += pokemonList.map(convertPokemonListToLi).join('');
-
-    // a funcao convertPokemonToList já faz a conversao então sempre que o map entra nela ela faz o map na lista
- 
-}); */
 
